@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  postgresdb:
+    image: postgres:latest
+    container_name: postgresdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=chainlink_bridges
+
+  bridge-query:
+    build: .
+    container_name: bridge-query
+    depends_on:
+      - postgresdb
+    environment:
+      - POSTGRES_HOST=postgresdb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=chainlink_bridges
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
