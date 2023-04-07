@@ -1,23 +1,45 @@
-version: '3'
+version: '3.8'
 
 services:
-  postgresdb:
-    image: postgres:latest
-    container_name: postgresdb
+  postgres:
+    image: postgres:13
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=chainlink_bridges
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=POSTGRES_DM_NAME
+      - POSTGRES_USER=POSTGRES_USERNAME
+      - POSTGRES_PASSWORD=POSTRGES_PASSWORD
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
-  bridge-query:
+  indexer:
     build: .
-    container_name: bridge-query
     depends_on:
-      - postgresdb
-    environment:
-      - POSTGRES_HOST=postgresdb
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=chainlink_bridges
+      - postgres
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - API_USERNAME=name@domain.com
+      - API_PASSWORD=YOUR_PASSWORD
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=POSTGRES_DM_NAME
+      - POSTGRES_USER=POSTGRES_USERNAME
+      - POSTGRES_PASSWORD=POSTRGES_PASSWORD
+    command: ["./entrypoint.sh"]
+
+  api:
+    build: ./api
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=POSTGRES_DM_NAME
+      - POSTGRES_USER=POSTGRES_USERNAME
+      - POSTGRES_PASSWORD=POSTRGES_PASSWORD
+
+volumes:
+  postgres-data:
