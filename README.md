@@ -16,6 +16,7 @@ chainlinkIndexer/
 ├── docker-compose.yml
 ├── Dockerfile
 ├── entrypoint.sh
+├── init.sql
 ├── LICENSE
 └── README.md
 
