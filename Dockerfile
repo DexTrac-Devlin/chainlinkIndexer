@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --no-cache curl jq postgresql-client telnet
+RUN apk add --no-cache curl jq postgresql-client busybox-extras
 
 COPY entrypoint.sh /
 COPY init.sql /
