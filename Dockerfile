@@ -3,7 +3,6 @@ FROM alpine:3.14
 RUN apk add --no-cache curl jq postgresql-client busybox-extras coreutils
 
 COPY entrypoint.sh /
-COPY init.sql /
 
 ENV POSTGRES_HOST=localhost
 ENV POSTGRES_PORT=5432
