@@ -47,14 +47,13 @@ EOSQL
 echo "Waiting for PostgreSQL to be ready..."
 MAX_ATTEMPTS=20
 COUNTER=0
-while ! PGPASSWORD=${POSTGRES_PASSWORD} psql -h "${POSTGRES_HOST}" -p "${POSTGRES_PORT}" -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "SELECT 1" >/dev/null 2>&1; do
-  COUNTER=$((COUNTER+1))
-  if [ $COUNTER -ge $MAX_ATTEMPTS ]; then
-    echo "PostgreSQL is unavailable after $MAX_ATTEMPTS attempts. Exiting."
+while ! nc -z -w 5 "$POSTGRES_HOST" "$POSTGRES_PORT"; do
+  sleep 1
+  counter=$((counter + 1))
+  if [ $counter -gt 60 ]; then
+    echo "Unable to connect to PostgreSQL after 60 seconds. Exiting."
     exit 1
   fi
-  echo "PostgreSQL is unavailable. Retrying in 3 seconds... (Attempt: $COUNTER)"
-  sleep 3
 done
 echo "PostgreSQL is ready."
 
