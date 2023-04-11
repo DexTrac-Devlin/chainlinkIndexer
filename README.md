@@ -50,9 +50,9 @@ Update the environment variables in the docker-compose.yml file according to you
       - API_PASSWORD=YOUR_PASSWORD
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-      - POSTGRES_DB=POSTGRES_DM_NAME
+      - POSTGRES_DB=POSTGRES_DB_NAME
       - POSTGRES_USER=POSTGRES_USERNAME
-      - POSTGRES_PASSWORD=POSTRGES_PASSWORD
+      - POSTGRES_PASSWORD=POSTGRES_PASSWORD
 ```
 
 Start the PostgreSQL, indexer, and API services:
