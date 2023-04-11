@@ -17,8 +17,5 @@ USER indexer
 # Copy the entrypoint.sh script
 COPY ./entrypoint.sh /entrypoint.sh
 
-# Set the entrypoint.sh script as executable
-RUN chmod +x /entrypoint.sh
-
 # Run entrypoint.sh script
 ENTRYPOINT ["/entrypoint.sh"]
