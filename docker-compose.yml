@@ -21,10 +21,9 @@ services:
       - postgres
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./.env:/.env
     env_file:
       - ./.env
-    volumes:
-      - ./indexer/.env:/app/.env
     command: ["./entrypoint.sh"]
     networks:
       agent_net:
