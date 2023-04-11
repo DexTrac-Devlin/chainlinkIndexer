@@ -18,12 +18,20 @@ POSTGRES_USER="$POSTGRES_USER"
 POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
 POSTGRES_TABLE='chainlink_bridges'
 
-# Test connectivity to PostgreSQL host
-if ! timeout $POSTGRES_TIMEOUT_SECONDS bash -c "</dev/tcp/${POSTGRES_HOST}/${POSTGRES_PORT}" >/dev/null 2>&1; then
-  echo "Error: Connection to postgresql host at ${POSTGRES_HOST}:${POSTGRES_PORT} timed out"
-  echo "Please check your settings."
-  exit 1
-fi
+# Wait for PostgreSQL to be ready
+echo "Waiting for PostgreSQL to be ready..."
+MAX_ATTEMPTS=20
+COUNTER=0
+while ! PGPASSWORD=${POSTGRES_PASSWORD} psql -h "${POSTGRES_HOST}" -p "${POSTGRES_PORT}" -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "SELECT 1" >/dev/null 2>&1; do
+  COUNTER=$((COUNTER+1))
+  if [ $COUNTER -ge $MAX_ATTEMPTS ]; then
+    echo "PostgreSQL is unavailable after $MAX_ATTEMPTS attempts. Exiting."
+    exit 1
+  fi
+  echo "PostgreSQL is unavailable. Retrying in 3 seconds... (Attempt: $COUNTER)"
+  sleep 3
+done
+echo "PostgreSQL is ready."
 
 # Check if the database exists, and create it if not
 PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="postgres" <<-EOSQL
