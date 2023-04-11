@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM debian:buster
 
 RUN apk add --no-cache curl jq postgresql-client busybox-extras coreutils
 
