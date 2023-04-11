@@ -74,16 +74,20 @@ for CONTAINER in $(docker ps --quiet --filter "status=running"); do
     BRIDGE_URLS=$(curl -c cookiefile -b cookiefile --insecure --silent --show-error $BRIDGE_TYPES_URL | jq -r '.data[] | .attributes.url')
 
     # Update chainlink_bridges table with bridge names and bridge urls
-    BRIDGE_DATA=$(paste <(echo "$BRIDGE_NAMES") <(echo "$BRIDGE_URLS") -d ' ')
-    echo "$BRIDGE_DATA" | while read -r BRIDGE_NAME BRIDGE_URL; do
-    PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" <<EOSQL
+    BRIDGE_DATA=$(echo "$BRIDGE_NAMES" | paste - "$(echo "$BRIDGE_URLS")")
+    while read -r BRIDGE_NAME BRIDGE_URL; do
+      PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" <<EOSQL
 INSERT INTO ${POSTGRES_TABLE} (node_url, bridge_name, bridge_url) VALUES ('${CHAINLINK_URL}', '${BRIDGE_NAME}', '${BRIDGE_URL}')
 ON CONFLICT (node_url, bridge_name) DO UPDATE SET bridge_url = EXCLUDED.bridge_url;
 EOSQL
-    done
+    done <<< "$BRIDGE_DATA"
+
   fi
 done
 
 # Print results
 echo "Chainlink bridges:"
 PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" --command "SELECT * FROM chainlink_bridges;"
+
+
+
