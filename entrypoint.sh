@@ -27,12 +27,12 @@ else
 fi
 
 # Check if the database exists, and create it if not
-PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="postgres" <<-EOSQL
+PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="postgres" <<- 'EOSQL'
   SELECT 'CREATE DATABASE ${POSTGRES_DB}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${POSTGRES_DB}')\gexec
 EOSQL
 
 # Create table if one does not already exist
-PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" <<-EOSQL
+PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" <<- 'EOSQL'
 CREATE TABLE IF NOT EXISTS $POSTGRES_TABLE (
   id SERIAL PRIMARY KEY,
   node_url VARCHAR(255) NOT NULL,
@@ -76,7 +76,7 @@ for CONTAINER in $(docker ps --quiet --filter "status=running"); do
     # Update chainlink_bridges table with bridge names and bridge urls
     BRIDGE_DATA=$(paste <(echo "$BRIDGE_NAMES") <(echo "$BRIDGE_URLS") -d ' ')
     while read -r BRIDGE_NAME BRIDGE_URL; do
-      PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" <<-EOSQL
+      PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" <<- 'EOSQL'
 INSERT INTO ${POSTGRES_TABLE} (node_url, bridge_name, bridge_url) VALUES ('${CHAINLINK_URL}', '${BRIDGE_NAME}', '${BRIDGE_URL}')
 ON CONFLICT (node_url, bridge_name) DO UPDATE SET bridge_url = EXCLUDED.bridge_url;
 EOSQL
@@ -88,5 +88,3 @@ done
 # Print results
 echo "Chainlink bridges:"
 PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" --command "SELECT * FROM chainlink_bridges;"
-
-
