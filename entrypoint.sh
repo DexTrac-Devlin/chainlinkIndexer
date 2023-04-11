@@ -19,7 +19,7 @@ POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
 POSTGRES_TABLE='chainlink_bridges'
 
 # Test PostgreSQL connection with provided vars
-if timeout 1 bash -c "echo >/dev/tcp/$POSTGRES_HOST/$POSTGRES_PORT"; then
+if timeout 1 sh -c "echo >/dev/tcp/$POSTGRES_HOST/$POSTGRES_PORT"; then
     echo "PostgreSQL is listening on port 5432. Proceeding with further commands."
     # Add your commands here
 else
