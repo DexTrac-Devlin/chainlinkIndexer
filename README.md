@@ -44,15 +44,20 @@ Build the Docker containers for all services:
 
 `docker-compose build`
 
-Update the environment variables in the docker-compose.yml file according to your configuration:
+Update the environment variables in the .env file according to your configuration:
 ```
-      - API_USERNAME=name@domain.com
-      - API_PASSWORD=YOUR_PASSWORD
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=POSTGRES_DB_NAME
-      - POSTGRES_USER=POSTGRES_USERNAME
-      - POSTGRES_PASSWORD=POSTGRES_PASSWORD
+# Chainlink Node(s) Details
+API_USERNAME=name@domain.com
+API_PASSWORD=chainlink_ui_password
+
+# PostgreSQL Details
+POSTGRES_TIMEOUT_SECONDS=3
+POSTGRES_HOST=192.168.88.2
+POSTGRES_PORT=5432
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password
+POSTGRES_DB=concord_agent
+POSTGRES_TABLE=chainlink_bridges
 ```
 
 Start the PostgreSQL, indexer, and API services:
