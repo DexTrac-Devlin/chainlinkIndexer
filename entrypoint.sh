@@ -1,5 +1,23 @@
 #!/bin/sh
 
+# Load environment variables from .env file
+set -o allexport
+source .env
+set +o allexport
+
+# Chainlink Nodes Variables
+API_USERNAME="$API_USERNAME"
+API_PASSWORD="$API_PASSWORD"
+
+# PostgreSQL Variables
+POSTGRES_TIMEOUT_SECONDS=3
+POSTGRES_HOST="$POSTGRES_HOST"
+POSTGRES_PORT="$POSTGRES_PORT"
+POSTGRES_DB="$POSTGRES_DB"
+POSTGRES_USER="$POSTGRES_USER"
+POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
+POSTGRES_TABLE='chainlink_bridges'
+
 # Test connectivity to PostgreSQL host
 if ! timeout $POSTGRES_TIMEOUT_SECONDS bash -c "</dev/tcp/${POSTGRES_HOST}/${POSTGRES_PORT}" >/dev/null 2>&1; then
   echo "Error: Connection to postgresql host at ${POSTGRES_HOST}:${POSTGRES_PORT} timed out"
