@@ -18,20 +18,14 @@ POSTGRES_USER="$POSTGRES_USER"
 POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
 POSTGRES_TABLE='chainlink_bridges'
 
-# Wait for PostgreSQL to be ready
-echo "Waiting for PostgreSQL to be ready..."
-MAX_ATTEMPTS=20
-COUNTER=0
-while ! PGPASSWORD=${POSTGRES_PASSWORD} psql -h "${POSTGRES_HOST}" -p "${POSTGRES_PORT}" -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "SELECT 1" >/dev/null 2>&1; do
-  COUNTER=$((COUNTER+1))
-  if [ $COUNTER -ge $MAX_ATTEMPTS ]; then
-    echo "PostgreSQL is unavailable after $MAX_ATTEMPTS attempts. Exiting."
+# Test PostgreSQL connection with provided vars
+if timeout 1 bash -c "echo >/dev/tcp/$POSTGRES_HOST/$POSTGRES_PORT"; then
+    echo "PostgreSQL is listening on port 5432. Proceeding with further commands."
+    # Add your commands here
+else
+    echo "Unable to connect to PostgreSQL at $POSTGRES_HOST:$POSTGRES_PORT. Aborting."
     exit 1
-  fi
-  echo "PostgreSQL is unavailable. Retrying in 3 seconds... (Attempt: $COUNTER)"
-  sleep 3
-done
-echo "PostgreSQL is ready."
+fi
 
 # Check if the database exists, and create it if not
 PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="postgres" <<-EOSQL
@@ -48,6 +42,21 @@ CREATE TABLE IF NOT EXISTS $POSTGRES_TABLE (
   UNIQUE (node_url, bridge_name)
 );
 EOSQL
+
+# Wait for PostgreSQL to be ready
+echo "Waiting for PostgreSQL to be ready..."
+MAX_ATTEMPTS=20
+COUNTER=0
+while ! PGPASSWORD=${POSTGRES_PASSWORD} psql -h "${POSTGRES_HOST}" -p "${POSTGRES_PORT}" -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "SELECT 1" >/dev/null 2>&1; do
+  COUNTER=$((COUNTER+1))
+  if [ $COUNTER -ge $MAX_ATTEMPTS ]; then
+    echo "PostgreSQL is unavailable after $MAX_ATTEMPTS attempts. Exiting."
+    exit 1
+  fi
+  echo "PostgreSQL is unavailable. Retrying in 3 seconds... (Attempt: $COUNTER)"
+  sleep 3
+done
+echo "PostgreSQL is ready."
 
 # Fetch running containers and identify which ones are Chainlink nodes
 for CONTAINER in $(docker ps --quiet --filter "status=running"); do
