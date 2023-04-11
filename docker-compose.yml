@@ -11,6 +11,9 @@ services:
       - POSTGRES_PASSWORD=POSTRGES_PASSWORD
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    networks:
+      chainlink_network:
+        ipv4_address: 192.168.88.2
 
   indexer:
     build: .
@@ -27,6 +30,10 @@ services:
       - POSTGRES_USER=POSTGRES_USERNAME
       - POSTGRES_PASSWORD=POSTRGES_PASSWORD
     command: ["./entrypoint.sh"]
+    networks:
+      chainlink_network:
+        ipv4_address: 192.168.88.3
+
 
   api:
     build: ./api
@@ -40,6 +47,17 @@ services:
       - POSTGRES_DB=POSTGRES_DB_NAME
       - POSTGRES_USER=POSTGRES_USERNAME
       - POSTGRES_PASSWORD=POSTRGES_PASSWORD
+    networks:
+      chainlink_network:
+        ipv4_address: 192.168.88.4
+
+networks:
+  concord_agent_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.88.0/24
 
 volumes:
   postgres-data:
