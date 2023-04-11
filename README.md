@@ -1,6 +1,6 @@
-# Chainlink Indexer
+# Concord Agent
 
-This repository contains a Chainlink indexer script and a TypeScript API for monitoring Chainlink nodes and their external adapters. The indexer script collects data about Chainlink nodes an
+This repository contains a Concord Agent script and a TypeScript API for monitoring Chainlink nodes and their external adapters. The Concord Agent script collects data about Chainlink nodes an
 d their bridges, storing the information in a PostgreSQL database. The TypeScript API serves the collected data from the PostgreSQL database.
 
 ## Directory Structure
@@ -37,7 +37,7 @@ chainlinkIndexer/
 
 Change directory to the chainlinkIndexer folder:
 
-`cd chainlinkIndexer`
+`cd concordAgent`
 
 
 Build the Docker containers for all services:
@@ -59,7 +59,7 @@ Start the PostgreSQL, indexer, and API services:
 
 `docker-compose up`
 
-The Chainlink indexer will start running, and the TypeScript API will be accessible at http://localhost:3000/bridges.
+The Concord Agent will start running, and the TypeScript API will be accessible at http://localhost:3000/bridges.
 
 API Endpoints
 GET /bridges: Fetch the list of Chainlink bridges and their associated dat.a from the PostgreSQL database.
