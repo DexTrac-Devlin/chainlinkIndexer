@@ -9,6 +9,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       concord_net:
+        name: concord_net
         ipv4_address: 192.168.88.2
 
   indexer:
@@ -24,6 +25,7 @@ services:
     command: ["./entrypoint.sh"]
     networks:
       concord_net:
+        name: concord_net
         ipv4_address: 192.168.88.3
 
   api:
@@ -36,6 +38,7 @@ services:
       - ./.env
     networks:
       concord_net:
+        name: concord_net
         ipv4_address: 192.168.88.4
 
 networks:
