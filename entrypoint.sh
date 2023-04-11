@@ -1,18 +1,5 @@
 #!/bin/sh
 
-# Chainlink Nodes Variables
-API_USERNAME='name@domain.com'
-API_PASSWORD='YOUR_PASSWORD'
-
-# PostgreSQL Variables
-POSTGRES_TIMEOUT_SECONDS=3
-POSTGRES_HOST='192.168.88.2'
-POSTGRES_PORT='5432'
-POSTGRES_DB='POSTGRES_DB_NAME'
-POSTGRES_USER='POSTGRES_USERNAME'
-POSTGRES_PASSWORD='POSTRGES_PASSWORD'
-POSTGRES_TABLE='chainlink_bridges'
-
 # Test connectivity to PostgreSQL host
 if ! timeout $POSTGRES_TIMEOUT_SECONDS bash -c "</dev/tcp/${POSTGRES_HOST}/${POSTGRES_PORT}" >/dev/null 2>&1; then
   echo "Error: Connection to postgresql host at ${POSTGRES_HOST}:${POSTGRES_PORT} timed out"
