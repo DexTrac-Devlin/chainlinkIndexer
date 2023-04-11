@@ -1,7 +1,11 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Chainlink Indexer API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DexTrac-Devlin/concordAgent.git"
+  },
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
