@@ -2,7 +2,7 @@
 
 # Load environment variables from .env file
 set -o allexport
-source .env
+source /app/.env
 set +o allexport
 
 # Chainlink Nodes Variables

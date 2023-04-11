@@ -19,6 +19,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - .env
+    volumes:
+      - ./indexer/.env:/app/.env
     command: ["./entrypoint.sh"]
     networks:
       concord_net:
