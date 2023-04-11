@@ -37,7 +37,7 @@ chainlinkIndexer/
 
 Change directory to the chainlinkIndexer folder:
 
-`cd chainlinkIndexer`
+`cd concordAgent`
 
 
 Build the Docker containers for all services:
