@@ -56,6 +56,9 @@ The script will install the necessary dependencies, deploy the containers, and c
 
 Replace `<your_postgres_password>`, `<postgres_host>`, `<postgres_port>`, `<postgres_user>`, and `<postgres_db>` with the appropriate values from your `.env` file.
 
+4. To query the API service, run:
+`curl http://localhost:3000/bridges | jq -r`
+
 ## Uninstall
 1. Run the uninstall script:
 
