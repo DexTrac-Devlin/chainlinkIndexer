@@ -6,27 +6,8 @@ Concord Agent is a utility for monitoring Chainlink nodes and updating a Postgre
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Uninstall + Cleanup](#Uninstall)
 - [License](#license)
-
-```
-├── api
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── src
-│   │   └── index.ts
-│   └── tsconfig.json
-├── concordIndexer.sh
-├── docker-compose.yml
-├── indexer
-├── install.sh
-├── LICENSE
-├── postgres-config
-│   └── postgresql.conf
-├── postgresql.conf
-├── README.md
-└── uninstall.sh
-
-```
 
 ## Requirements
 - Docker
@@ -42,7 +23,9 @@ Concord Agent is a utility for monitoring Chainlink nodes and updating a Postgre
 `cd concordAgent`
 
 
-2. Open and modify the `.env` file and update the environment variables as needed:
+2. Copy `.env.example` to `.env` and update the environment variables as needed:
+
+`cp .env.example .env`
 
 `nano .env`
 
@@ -72,6 +55,16 @@ The script will install the necessary dependencies, deploy the containers, and c
 
 
 Replace `<your_postgres_password>`, `<postgres_host>`, `<postgres_port>`, `<postgres_user>`, and `<postgres_db>` with the appropriate values from your `.env` file.
+
+## Uninstall
+1. Run the uninstall script:
+
+`sudo bash uninstall.sh`
+
+
+The script will bring down the PostgreSQL and API containers, delete the images, stop the concord_indexer service and delete the systemd file.
+
+
 
 ## License
 
