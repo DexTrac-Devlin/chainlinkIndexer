@@ -35,7 +35,7 @@ docker image rm concordagent_api:latest node:14 postgres:13
 
 # Stop and remove service and service files
 purge_service(){
-sudo systemcstl stop concord_indexer.service
+sudo systemctl stop concord_indexer.service
 sudo rm  /etc/systemd/system/concord_indexer.service
 sudo rm -rf /opt/concordAgent
 }
