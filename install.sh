@@ -49,7 +49,7 @@ sudo apt-get install -y \
 
 # Build and install necessary containers
 deploy_containers() {
-docker-compose --build
+docker-compose build
 docker-compose up -d
 }
 
