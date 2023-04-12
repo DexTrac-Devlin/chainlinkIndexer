@@ -106,6 +106,7 @@ if [ ! -d /opt/concordAgent ]; then
   sudo mkdir /opt/concordAgent
 fi
 sudo cp $WORKING_DIR/concordIndexer.sh /opt/concordAgent/
+sudo cp $WORKING_DIR/.env /opt/concordAgent/
 
 sudo tee /etc/systemd/system/concord_indexer.service > /dev/null <<EOF
 [Unit]
