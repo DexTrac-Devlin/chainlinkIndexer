@@ -8,6 +8,14 @@ blue_fg=$(tput setaf 6)
 # reset to default
 reset=$(tput sgr0)
 
+# Check if command is run with sudo, if not exit.
+check_sudo() {
+if [ "$EUID" -ne 0 ]; then
+  echo "This script must be run with sudo. Exiting."
+  exit 1
+fi
+}
+
 # Fetch/set the necessary variables
 set_vars() {
 WORKING_DIR=$(pwd)
@@ -39,6 +47,7 @@ echo "deleted service files"
 }
 
 # Run
+check_sudo
 set_vars
 stop_containers
 remove_containers
