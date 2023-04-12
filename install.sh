@@ -56,12 +56,12 @@ docker-compose up -d
 # Check connectivity to postgres with provided variables
 check_postgres() {
 echo "Waiting for PostgreSQL to be ready..."
-MAX_ATTEMPTS=20
+MAX_ATTEMPTS=20 # 20 attempts; 3 sec between each attempt
 COUNTER=0
 while ! nc -z -w 5 "$POSTGRES_HOST" "$POSTGRES_PORT"; do
   sleep 1
   counter=$((counter + 1))
-  if [ $counter -gt 60 ]; then
+  if [ $counter -gt $MAX_ATTEMPTS ]; then
     echo "Unable to connect to PostgreSQL after 60 seconds. Exiting."
     exit 1
   fi
@@ -105,7 +105,7 @@ create_service() {
 sudo mkdir /opt/concordAgent
 sudo cp $WORKING_DIR/concordIndexer.sh /opt/concordAgent/
 
-sudo tee /etc/systemd/system/my_service.service <<EOF
+sudo tee /etc/systemd/system/concord_indexer.service <<EOF
 [Unit]
 Description=Concord Indexer
 
@@ -124,16 +124,16 @@ EOF
 # Reload systemd daemon and start service
 start_concordIndexer() {
 sudo systemctl daemon-reload
-sudo systemctl enable my_service
-sudo systemctl start my_service
+sudo systemctl enable concord_indexer
+sudo systemctl start concord_indexer
 }
 
 # Print results
 print_results(){
-echo "The concordIndexer script is located at $(tput setaf 6)/opt/concordAgent/concordIndexer.sh$(reset)"
+echo "The concordIndexer script is located at ${tput setaf 6}/opt/concordAgent/concordIndexer.sh${reset}"
 echo "PostgreSQL Information:"
-echo "  Database name: $(tput setaf 6)$POSTGRES_DB$(reset)"
-echo "  Table Name:    $(tput setaf 6)$POSTGRES_TABLE$(reset)"
+echo "  Database name: ${tput setaf 6}$POSTGRES_DB${reset}"
+echo "  Table Name:    ${tput setaf 6}$POSTGRES_TABLE${reset}"
 }
 
 # Run
