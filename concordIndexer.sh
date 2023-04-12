@@ -26,22 +26,6 @@ else
     exit 1
 fi
 
-# Check if the database exists, and create it if not
-PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="postgres" <<-EOSQL
-  SELECT 'CREATE DATABASE ${POSTGRES_DB}' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '${POSTGRES_DB}')\gexec
-EOSQL
-
-# Create table if one does not already exist
-PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" <<EOSQL
-CREATE TABLE IF NOT EXISTS $POSTGRES_TABLE (
-  id SERIAL PRIMARY KEY,
-  node_url VARCHAR(255) NOT NULL,
-  bridge_name VARCHAR(255) NOT NULL,
-  bridge_url VARCHAR(255) NOT NULL,
-  UNIQUE (node_url, bridge_name)
-);
-EOSQL
-
 # Wait for PostgreSQL to be ready
 echo "Waiting for PostgreSQL to be ready..."
 MAX_ATTEMPTS=20
@@ -88,6 +72,3 @@ done
 # Print results
 echo "Chainlink bridges:"
 PGPASSWORD=${POSTGRES_PASSWORD} psql --host="${POSTGRES_HOST}" --port="${POSTGRES_PORT}" --username="${POSTGRES_USER}" --dbname="${POSTGRES_DB}" --command "SELECT * FROM chainlink_bridges;"
-
-
-
