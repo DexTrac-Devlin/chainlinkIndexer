@@ -133,6 +133,7 @@ sudo systemctl start concord_indexer
 
 # Print results
 print_results(){
+echo "---------"
 echo "The concordIndexer script is located at ${blue_fg}/opt/concordAgent/concordIndexer.sh${reset}"
 echo "PostgreSQL Information:"
 echo "  Database name: ${blue_fg}$POSTGRES_DB${reset}"
