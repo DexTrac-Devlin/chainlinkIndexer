@@ -102,10 +102,12 @@ sudo usermod -aG docker concordIndexer
 
 # Create systemd service for concordAgent.sh that runs once every ~15 minutes
 create_service() {
-sudo mkdir /opt/concordAgent
+if [ ! -d /opt/concordAgent ]; then
+  sudo mkdir /opt/concordAgent
+fi
 sudo cp $WORKING_DIR/concordIndexer.sh /opt/concordAgent/
 
-sudo tee /etc/systemd/system/concord_indexer.service <<EOF
+sudo tee /etc/systemd/system/concord_indexer.service > /dev/null <<EOF
 [Unit]
 Description=Concord Indexer
 
