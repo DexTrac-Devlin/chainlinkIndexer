@@ -1,78 +1,78 @@
 # Concord Agent
 
-This repository contains a Concord Agent script and a TypeScript API for monitoring Chainlink nodes and their external adapters. The Concord Agent script collects data about Chainlink nodes an
-d their bridges, storing the information in a PostgreSQL database. The TypeScript API serves the collected data from the PostgreSQL database.
+Concord Agent is a utility for monitoring Chainlink nodes and updating a PostgreSQL table with bridge information.
 
-## Directory Structure
+## Table of Contents
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [License](#license)
 
 ```
-chainlinkIndexer/
 ├── api
 │   ├── Dockerfile
 │   ├── package.json
 │   ├── src
 │   │   └── index.ts
 │   └── tsconfig.json
+├── concordIndexer.sh
 ├── docker-compose.yml
-├── Dockerfile
-├── entrypoint.sh
-├── init.sql
+├── indexer
+├── install.sh
 ├── LICENSE
-└── README.md
+├── postgres-config
+│   └── postgresql.conf
+├── postgresql.conf
+├── README.md
+└── uninstall.sh
 
 ```
 
-## Prerequisites
-
+## Requirements
 - Docker
 - Docker Compose
+- PostgreSQL
 
 ## Installation
 
 1. Clone the repository:
 
-
-`git clone https://github.com/DexTrac-Devlin/chainlinkIndexer.git`
-
-
-Change directory to the chainlinkIndexer folder:
+`git clone https://github.com/DexTrac-Devlin/concordAgent.git`
 
 `cd concordAgent`
 
 
-Build the Docker containers for all services:
+2. Open and modify the `.env` file and update the environment variables as needed:
 
-`docker-compose build`
-
-Update the environment variables in the .env file according to your configuration:
-```
-# Chainlink Node(s) Details
-API_USERNAME=name@domain.com
-API_PASSWORD=chainlink_ui_password
-
-# PostgreSQL Details
-POSTGRES_TIMEOUT_SECONDS=3
-POSTGRES_HOST=192.168.88.2
-POSTGRES_PORT=5432
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=password
-POSTGRES_DB=concord_agent
-POSTGRES_TABLE=chainlink_bridges
-```
-
-Start the PostgreSQL, indexer, and API services:
-
-`docker-compose up`
-
-The Concord Agent will start running, and the TypeScript API will be accessible at http://localhost:3000/bridges.
-
-API Endpoints
-GET /bridges: Fetch the list of Chainlink bridges and their associated dat.a from the PostgreSQL database.
-For any questions or issues, please open an issue on the repository.
+`nano .env`
 
 
-This README was built with assistance from ChatGPT
+3. Run the installation script:
+
+`sudo bash install.sh`
 
 
-This README provides an overview of the Chainlink indexer project, instructions for installation, and information about the API endpoints. You can add this README.md file to the root of the 
-`chainlinkIndexer` repository.
+The script will install the necessary dependencies, deploy the containers, and create a systemd service to run the Concord Indexer periodically.
+
+## Usage
+
+1. The Concord Indexer will be automatically run by the created systemd service every 15 minutes. You can check the status of the service with:
+
+`sudo systemctl status concord_indexer`
+
+
+2. If you need to manually run the Concord Indexer, execute the script:
+
+`sudo -u concordIndexer /opt/concordAgent/concordIndexer.sh`
+
+
+3. To view the information stored in the PostgreSQL table, run:
+
+`PGPASSWORD=<your_postgres_password> psql --host=<postgres_host> --port=<postgres_port> --username=<postgres_user> --dbname=<postgres_db> --command "SELECT * FROM chainlink_bridges;"`
+
+
+Replace `<your_postgres_password>`, `<postgres_host>`, `<postgres_port>`, `<postgres_user>`, and `<postgres_db>` with the appropriate values from your `.env` file.
+
+## License
+
+[GPLv3](LICENSE)
