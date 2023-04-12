@@ -42,8 +42,9 @@ sudo rm -rf /opt/concordAgent
 
 # Print results
 print_results() {
-echo "stopped & removed postgres and api containers"
-echo "deleted service files"
+echo "---------"
+echo "${blue_fg}Stopped & removed postgres and api containers${reset}"
+echo "${blue_fg}Deleted service files${reset}"
 }
 
 # Run
