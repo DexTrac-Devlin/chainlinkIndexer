@@ -130,10 +130,10 @@ sudo systemctl start concord_indexer
 
 # Print results
 print_results(){
-echo "The concordIndexer script is located at ${tput setaf 6}/opt/concordAgent/concordIndexer.sh${reset}"
+echo "The concordIndexer script is located at ${blue_fg}/opt/concordAgent/concordIndexer.sh${reset}"
 echo "PostgreSQL Information:"
-echo "  Database name: ${tput setaf 6}$POSTGRES_DB${reset}"
-echo "  Table Name:    ${tput setaf 6}$POSTGRES_TABLE${reset}"
+echo "  Database name: ${blue_fg}$POSTGRES_DB${reset}"
+echo "  Table Name:    ${blue_fg}$POSTGRES_TABLE${reset}"
 }
 
 # Run
